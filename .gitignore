@@ -37,3 +37,4 @@ istest
 iscmd
 QtSearcher
 QtSearcher_automoc.cpp
+moc_statuswindow.cpp
