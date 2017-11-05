@@ -31,7 +31,6 @@ private slots:
     void keepCandidate();
     void keepNone();
     void about();
-    void aboutQt();
 
 private:
     void createActions();
