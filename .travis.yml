@@ -1,0 +1,19 @@
+dist: xenial
+sudo: required
+before_install:
+  - sudo apt-get install -y libpthread-stubs0-dev  
+# Enable C++ support
+language: cpp
+# Compiler selection
+compiler:
+  - gcc
+
+before_script:
+  - git clone https://github.com/SSIP/ImpactSearcher.git
+  - cd ImpactSearcher && cmake src && make imse && make install
+# Build steps
+script:
+#  - mkdir build
+#  - cd build
+
+  - cmake src && make
