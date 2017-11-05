@@ -11,10 +11,10 @@ class QMenu;
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    MainWindow();
+	MainWindow();
 
     /*
 protected:
@@ -23,35 +23,35 @@ protected:
 #endif // QT_NO_CONTEXTMENU
 */
 private slots:
-    void startSearch();
-    void selectSource();
-    void selectDestination();
-    void keepAll();
-    void keepInteresting();
-    void keepCandidate();
-    void keepNone();
-    void about();
+	void startSearch();
+	void selectSource();
+	void selectDestination();
+	void keepAll();
+	void keepInteresting();
+	void keepCandidate();
+	void keepNone();
+	void about();
 
 private:
-    void createActions();
-    void createMenus();
+	void createActions();
+	void createMenus();
 
-    QMenu *searchMenu;
-    QMenu *configMenu;
-    QMenu *keepFrameMenu;
-    QMenu *helpMenu;
-    QActionGroup *keepFrameGroup;
-    QAction *searchAct;
-    QAction *exitAct;
-    QAction *srcAct;
-    QAction *dstAct;
-    QAction *bla;
-    QAction *keepAllAct;
-    QAction *keepInterestingAct;
-    QAction *keepCandidateAct;
-    QAction *keepNoneAct;
-    QAction *aboutAct;
-    QLabel *infoLabel;
+	QMenu *searchMenu;
+	QMenu *configMenu;
+	QMenu *keepFrameMenu;
+	QMenu *helpMenu;
+	QActionGroup *keepFrameGroup;
+	QAction *searchAct;
+	QAction *exitAct;
+	QAction *srcAct;
+	QAction *dstAct;
+	QAction *bla;
+	QAction *keepAllAct;
+	QAction *keepInterestingAct;
+	QAction *keepCandidateAct;
+	QAction *keepNoneAct;
+	QAction *aboutAct;
+	QLabel *infoLabel;
 };
 
 #endif
