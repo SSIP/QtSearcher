@@ -1,3 +1,4 @@
+#include "qtsearcher.h"
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
