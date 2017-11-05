@@ -10,7 +10,7 @@ compiler:
 
 before_script:
   - git clone https://github.com/SSIP/ImpactSearcher.git
-  - cd ImpactSearcher && cmake src && make imse && sudo make install
+  - cd ImpactSearcher && cmake src && make imse && sudo make install && cd ..
 # Build steps
 script:
 #  - mkdir build
