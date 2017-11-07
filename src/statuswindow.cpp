@@ -34,22 +34,21 @@ MainWindow::MainWindow()
 	setWindowTitle(tr("Menus"));
 	setMinimumSize(800, 600);
 	resize(1280, 960);
+	config cfg;
+	QThread* thread = new QThread;
+	Worker* worker = new Worker(&cfg);
+	worker->moveToThread(thread);
+	/*connect(worker, SIGNAL (error(QString)), this, SLOT (errorString(QString)));
+	//connect(thread, SIGNAL (started()), worker, SLOT (process()));
+	connect(worker, SIGNAL (finished()), thread, SLOT (quit()));
+	connect(worker, SIGNAL (finished()), worker, SLOT (deleteLater()));
+	connect(thread, SIGNAL (finished()), thread, SLOT (deleteLater()));*/
+	thread->start();
 }
 
-/*
-#ifndef QT_NO_CONTEXTMENU
-void MainWindow::contextMenuEvent(QContextMenuEvent *event)
-{
-    QMenu menu(this);
-    menu.addAction(cutAct);
-    menu.addAction(copyAct);
-    menu.addAction(pasteAct);
-    menu.exec(event->globalPos());
-}
-#endif // QT_NO_CONTEXTMENU
-*/
 void MainWindow::startSearch()
 {
+
 	infoLabel->setText(tr("start the search run"));
 }
 
@@ -183,4 +182,26 @@ void MainWindow::createMenus()
 	keepFrameMenu->addAction(keepInterestingAct);
 	keepFrameMenu->addAction(keepCandidateAct);
 	keepFrameMenu->addAction(keepNoneAct);
+}
+
+Worker::Worker(config *get_cfg)
+{
+	cfg = get_cfg;
+}
+
+Worker::~Worker()
+{
+
+}
+
+void Worker::process() 
+{
+	unsigned int microseconds = 500;
+	for(;;)
+	{
+		cfg->mUiAverage.lock();
+		cfg->mUiAverage.unlock();
+		usleep(microseconds);
+	}
+    emit finished();
 }

@@ -1,8 +1,8 @@
 #include "qtsearcher.h"
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
 #include <QMainWindow>
+#include <mutex>
+#include <thread>
+#include <unistd.h>
 
 class QAction;
 class QActionGroup;
@@ -15,13 +15,6 @@ class MainWindow : public QMainWindow
 
 public:
 	MainWindow();
-
-    /*
-protected:
-#ifndef QT_NO_CONTEXTMENU
-    void contextMenuEvent(QContextMenuEvent *event) override;
-#endif // QT_NO_CONTEXTMENU
-*/
 private slots:
 	void startSearch();
 	void selectSource();
@@ -52,6 +45,20 @@ private:
 	QAction *keepNoneAct;
 	QAction *aboutAct;
 	QLabel *infoLabel;
+	config *cfg;
+	QThread *thread;
 };
 
-#endif
+class Worker : public QObject {
+    Q_OBJECT
+public:
+    Worker(config *cfg);
+    ~Worker();
+public slots:
+    void process();
+signals:
+    void finished();
+    void error(QString err);
+private:
+    config *cfg;
+};
