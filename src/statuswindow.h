@@ -1,8 +1,10 @@
 #include "qtsearcher.h"
 #include <QMainWindow>
+#include <QFileDialog>
 #include <mutex>
 #include <thread>
 #include <unistd.h>
+#include <iostream>
 
 class QAction;
 class QActionGroup;
@@ -12,10 +14,12 @@ class QMenu;
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
+	config *cfg;
 
 public:
 	MainWindow();
 private slots:
+	void setStdConf(config* cfg);
 	void startSearch();
 	void selectSource();
 	void selectDestination();
@@ -45,7 +49,6 @@ private:
 	QAction *keepNoneAct;
 	QAction *aboutAct;
 	QLabel *infoLabel;
-	config *cfg;
 	QThread *thread;
 };
 
@@ -58,7 +61,6 @@ public slots:
     void process();
 signals:
     void finished();
-    void error(QString err);
 private:
     config *cfg;
 };
