@@ -1,28 +1,50 @@
-#include <QtWidgets>
-
 #include "statuswindow.h"
 
 MainWindow::MainWindow()
 {
+    QImage myImage;
+    myImage.load("test.bmp");
 	QWidget *widget = new QWidget;
 	setCentralWidget(widget);
+	QLabel *capCenter = new QLabel("Center");
+	capCenter->setAlignment(Qt::AlignRight);
+	QLabel *capAverage = new QLabel("Average");
+	capAverage->setAlignment(Qt::AlignLeft);
+	QLabel *capPresort = new QLabel("Presort");
+	capPresort->setAlignment(Qt::AlignRight);
+	QLabel *capCheck = new QLabel("Check");
+	capCheck->setAlignment(Qt::AlignLeft);
+	QLabel *imgCenter = new QLabel();
+	QLabel *imgAverage = new QLabel();
+	QLabel *imgPresort = new QLabel();
+	QLabel *imgCheck = new QLabel();
 
-	QWidget *topFiller = new QWidget;
-	topFiller->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	imgCenter->setFixedWidth(350);
+	imgCenter->setFixedHeight(350);
+	imgAverage->setFixedWidth(350);
+	imgAverage->setFixedHeight(350);
+	imgPresort->setFixedWidth(350);
+	imgPresort->setFixedHeight(350);
+	imgCheck->setFixedWidth(350);
+	imgCheck->setFixedHeight(350);
+	imgCenter->setPixmap(QPixmap::fromImage(myImage));
+	imgAverage->setPixmap(QPixmap::fromImage(myImage));
+	imgPresort->setPixmap(QPixmap::fromImage(myImage));
+	imgCheck->setPixmap(QPixmap::fromImage(myImage));
 
-	infoLabel = new QLabel(tr("<i>Choose a menu option, or right-click to "
-                              "invoke a context menu</i>"));
-	infoLabel->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
-	infoLabel->setAlignment(Qt::AlignCenter);
+	QTextEdit *logArea = new QTextEdit();
+	logArea->setText("Hello, world!");
 
-	QWidget *bottomFiller = new QWidget;
-	bottomFiller->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-
-	QVBoxLayout *layout = new QVBoxLayout;
-	layout->setMargin(5);
-	layout->addWidget(topFiller);
-	layout->addWidget(infoLabel);
-	layout->addWidget(bottomFiller);
+	QGridLayout *layout = new QGridLayout;
+	layout->addWidget(capCenter, 0, 0);
+	layout->addWidget(capAverage, 0, 3);
+	layout->addWidget(capPresort, 1, 0);
+	layout->addWidget(capCheck, 1, 3);
+	layout->addWidget(imgCenter, 0, 1);
+	layout->addWidget(imgAverage, 0, 2);
+	layout->addWidget(imgPresort, 1, 1);
+	layout->addWidget(imgCheck, 1, 2);
+	layout->addWidget(logArea, 2, 0, 1, 4);
 	widget->setLayout(layout);
 
 	createActions();
@@ -74,12 +96,12 @@ void MainWindow::startSearch()
 
 void MainWindow::selectSource()
 {
-	cfg->srcPath = QFileDialog::getExistingDirectory(this, tr("Open source directory"), QDir::currentPath(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks).toStdString();
+	cfg->srcPath = QFileDialog::getExistingDirectory(this, tr("Select source directory"), QDir::currentPath(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks).toStdString();
 }
 
 void MainWindow::selectDestination()
 {
-	cfg->dstPath = QFileDialog::getExistingDirectory(this, tr("Open source directory"), QDir::currentPath(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks).toStdString();
+	cfg->dstPath = QFileDialog::getExistingDirectory(this, tr("Select destination directory"), QDir::currentPath(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks).toStdString();
 }
 
 void MainWindow::keepAll()

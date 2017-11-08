@@ -1,6 +1,7 @@
 #include "qtsearcher.h"
 #include <QMainWindow>
 #include <QFileDialog>
+#include <QtWidgets>
 #include <mutex>
 #include <thread>
 #include <unistd.h>
@@ -32,7 +33,12 @@ private slots:
 private:
 	void createActions();
 	void createMenus();
-
+	QWidget *widget;
+	QLabel *imgCenter;
+	QLabel *imgAverage;
+	QLabel *imgPresort;
+	QLabel *imgCheck;
+	QGridLayout *layout;
 	QMenu *searchMenu;
 	QMenu *configMenu;
 	QMenu *keepFrameMenu;
