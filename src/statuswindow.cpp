@@ -2,6 +2,29 @@
 
 MainWindow::MainWindow()
 {
+	createLayout();
+	createActions();
+	createMenus();
+
+	setWindowTitle(tr("Menus"));
+	setMinimumSize(1280, 960);
+	resize(1280, 960);
+
+	config cfg;
+	MainWindow::setStdConf(&cfg);
+
+	QThread* thread = new QThread;
+	Worker* worker = new Worker(&cfg);
+	worker->moveToThread(thread);
+	/*connect(worker, SIGNAL (error(QString)), this, SLOT (errorString(QString)));
+	//connect(thread, SIGNAL (started()), worker, SLOT (process()));
+	connect(worker, SIGNAL (finished()), thread, SLOT (quit()));
+	connect(worker, SIGNAL (finished()), worker, SLOT (deleteLater()));
+	connect(thread, SIGNAL (finished()), thread, SLOT (deleteLater()));*/
+	thread->start();
+}
+
+void MainWindow::createLayout() {
     QImage myImage;
     myImage.load("test.bmp");
 	QWidget *widget = new QWidget;
@@ -46,28 +69,7 @@ MainWindow::MainWindow()
 	layout->addWidget(imgCheck, 1, 2);
 	layout->addWidget(logArea, 2, 0, 1, 4);
 	widget->setLayout(layout);
-
-	createActions();
-	createMenus();
-
-	setWindowTitle(tr("Menus"));
-	setMinimumSize(1280, 960);
-	resize(1280, 960);
-
-	config cfg;
-	MainWindow::setStdConf(&cfg);
-
-	QThread* thread = new QThread;
-	Worker* worker = new Worker(&cfg);
-	worker->moveToThread(thread);
-	/*connect(worker, SIGNAL (error(QString)), this, SLOT (errorString(QString)));
-	//connect(thread, SIGNAL (started()), worker, SLOT (process()));
-	connect(worker, SIGNAL (finished()), thread, SLOT (quit()));
-	connect(worker, SIGNAL (finished()), worker, SLOT (deleteLater()));
-	connect(thread, SIGNAL (finished()), thread, SLOT (deleteLater()));*/
-	thread->start();
 }
-
 
 void MainWindow::setStdConf(config* cfg) {
 	//cfg->imageResX = cfg->imageResY = 480;

@@ -1,4 +1,5 @@
 #include "qtsearcher.h"
+#include "helpers.h"
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QtWidgets>
@@ -31,6 +32,7 @@ private slots:
 	void about();
 
 private:
+	void createLayout();
 	void createActions();
 	void createMenus();
 	QWidget *widget;

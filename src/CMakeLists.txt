@@ -14,7 +14,7 @@ set(CMAKE_AUTOMOC ON)
 find_package(Qt5Widgets)
 
 # Tell CMake to create the helloworld executable
-add_executable(QtSearcher qtsearcher.cpp statuswindow.cpp)
+add_executable(QtSearcher qtsearcher.cpp statuswindow.cpp helpers.cpp)
 
 # Use the Widgets module from Qt 5.
 target_link_libraries(QtSearcher Qt5::Widgets)
