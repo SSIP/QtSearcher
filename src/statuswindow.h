@@ -21,7 +21,6 @@ class MainWindow : public QMainWindow
 public:
 	MainWindow();
 private slots:
-	void setStdConf(config* cfg);
 	void startSearch();
 	void selectSource();
 	void selectDestination();

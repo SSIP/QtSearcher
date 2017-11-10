@@ -7,4 +7,5 @@
 #include <unistd.h>
 #include <iostream>
 
-QImage toQimage(image *sourceImage);
+QImage *toQimage(image *sourceImage, config *cfg);
+void  setStdConf(config* cfg);
