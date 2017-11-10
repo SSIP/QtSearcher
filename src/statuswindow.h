@@ -61,13 +61,19 @@ private:
 
 class Worker : public QObject {
     Q_OBJECT
+    config *cfg;
+    QLabel *label;
+    int mode;
 public:
-    Worker(config *cfg);
+    Worker(config *get_cfg, QLabel *get_label, int get_mode);
     ~Worker();
 public slots:
     void process();
 signals:
     void finished();
 private:
-    config *cfg;
+    void getAverage();
+    void getCenter();
+    void getPresort();
+    void getCheck();
 };

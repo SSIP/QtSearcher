@@ -13,15 +13,22 @@ MainWindow::MainWindow()
 	config cfg;
 	setStdConf(&cfg);
 
-	QThread* thread = new QThread;
-	Worker* worker = new Worker(&cfg);
-	worker->moveToThread(thread);
-	/*connect(worker, SIGNAL (error(QString)), this, SLOT (errorString(QString)));
-	//connect(thread, SIGNAL (started()), worker, SLOT (process()));
-	connect(worker, SIGNAL (finished()), thread, SLOT (quit()));
-	connect(worker, SIGNAL (finished()), worker, SLOT (deleteLater()));
-	connect(thread, SIGNAL (finished()), thread, SLOT (deleteLater()));*/
-	thread->start();
+    QThread* thread1 = new QThread;
+    QThread* thread2 = new QThread;
+    QThread* thread3 = new QThread;
+    QThread* thread4 = new QThread;
+    Worker* worker1 = new Worker(&cfg, imgCenter, 1);
+    Worker* worker2 = new Worker(&cfg, imgAverage, 2);
+    Worker* worker3 = new Worker(&cfg, imgPresort, 3);
+    Worker* worker4 = new Worker(&cfg, imgCheck, 4);
+    worker1->moveToThread(thread1);
+    worker2->moveToThread(thread2);
+    worker3->moveToThread(thread3);
+    worker4->moveToThread(thread4);
+    thread1->start();
+    thread2->start();
+    thread3->start();
+    thread4->start();
 }
 
 void MainWindow::createLayout() {
@@ -211,9 +218,11 @@ void MainWindow::createMenus()
 	keepFrameMenu->addAction(keepNoneAct);
 }
 
-Worker::Worker(config *get_cfg)
+Worker::Worker(config *get_cfg, QLabel *get_label, int get_mode)
 {
-	cfg = get_cfg;
+    cfg = get_cfg;
+    label = get_label;
+    mode = get_mode;
 }
 
 Worker::~Worker()
@@ -223,15 +232,108 @@ Worker::~Worker()
 
 void Worker::process() 
 {
+    if(mode == 1)
+    {
+        Worker::getCenter();
+    }
+    if(mode == 2)
+    {
+        Worker::getAverage();
+    }
+    if(mode == 3)
+    {
+        Worker::getPresort();
+    }
+    if(mode == 4)
+    {
+        Worker::getCheck();
+    }
+}
+
+void Worker::getCenter()
+{
+    image *curImg = NULL;
+    QImage *curQimg = NULL;
 	unsigned int microseconds = 500;
 	for(;;)
 	{
-		cfg->mUiAverage.lock();
-		cfg->mUiAverage.unlock();
-		usleep(microseconds);
-		image *img;
-		QImage *bla;
-		bla = toQimage(img, cfg);
+        // lock UI to block average thread vom popping image
+        cfg->mUiCenter.lock();
+        // acquire average queue lock
+        cfg->mAverage.lock();
+        // get bottom image from queue
+        curImg = cfg->qAverage.back();
+        // release locks
+        cfg->mAverage.unlock();
+		cfg->mUiCenter.unlock();
+        curQimg = toQimage(curImg, cfg);
+        //label->setPixmap(QPixmap::fromImage(curQimg));
+        usleep(microseconds);
 	}
-    emit finished();
+}
+
+void Worker::getAverage()
+{
+    image *curImg = NULL;
+    QImage *curQimg = NULL;
+	unsigned int microseconds = 500;
+	for(;;)
+	{
+        // lock UI to block average thread vom popping image
+        cfg->mUiAverage.lock();
+        // acquire average queue lock
+        cfg->mPresort.lock();
+        // get bottom image from queue
+        curImg = cfg->qPresort.back();
+        // release locks
+        cfg->mPresort.unlock();
+		cfg->mUiAverage.unlock();
+        curQimg = toQimage(curImg, cfg);
+        //label->setPixmap(QPixmap::fromImage(curQimg));
+        usleep(microseconds);
+	}
+}
+
+void Worker::getPresort()
+{
+    image *curImg = NULL;
+    QImage *curQimg = NULL;
+	unsigned int microseconds = 500;
+	for(;;)
+	{
+        // lock UI to block average thread vom popping image
+        cfg->mUiPresort.lock();
+        // acquire average queue lock
+        cfg->mCheck.lock();
+        // get bottom image from queue
+        curImg = cfg->qCheck.back();
+        // release locks
+        cfg->mCheck.unlock();
+		cfg->mUiPresort.unlock();
+        curQimg = toQimage(curImg, cfg);
+        //label->setPixmap(QPixmap::fromImage(curQimg));
+        usleep(microseconds);
+	}
+}
+
+void Worker::getCheck()
+{
+    image *curImg = NULL;
+    QImage *curQimg = NULL;
+	unsigned int microseconds = 500;
+	for(;;)
+	{
+        // lock UI to block average thread vom popping image
+        //cfg->mUiCheck.lock();
+        // acquire average queue lock
+        //cfg->mAverage.lock();
+        // get bottom image from queue
+        //curImg = cfg->qCheck.back();
+        // release locks
+        //cfg->mAverage.unlock();
+		//cfg->mUiCenter.unlock();
+        //curQimg = toQimage(curImg, cfg);
+        // label->setPixmap(QPixmap::fromImage(curQimg));
+        usleep(microseconds);
+	}
 }
