@@ -33,8 +33,8 @@ compile_commands.json
 CTestTestfile.cmake
 
 libimse.so
-istest
 iscmd
 QtSearcher
 QtSearcher_automoc.cpp
-moc_statuswindow.cpp
+moc_*.cpp
+test.bmp
