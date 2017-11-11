@@ -1,14 +1,13 @@
 #include "helpers.h"
 
-QImage *toQimage(image *sourceImage, config *cfg)
+void toQimage(image *sourceImage, config *cfg, QImage *curImg)
 {
-	QImage *result = new QImage(sourceImage->rawBitmap,
-	                            static_cast<int>(cfg->imageResX),
-                                static_cast<int>(cfg->imageResY),
-								static_cast<int>(cfg->imageResX),
-                                QImage::Format_Indexed8
-	                           );
-	return result;
+	curImg = new QImage(sourceImage->rawBitmap,
+						static_cast<int>(cfg->imageResX),
+						static_cast<int>(cfg->imageResY),
+						static_cast<int>(cfg->imageResX),
+						QImage::Format_Indexed8
+						);
 }
 
 void  setStdConf(config* cfg) {
