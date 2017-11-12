@@ -80,7 +80,7 @@ void MainWindow::createLayout() {
 void MainWindow::startSearch()
 {
 
-	infoLabel->setText(tr("start the search run"));
+	impactSearcherStart(cfg);
 }
 
 void MainWindow::selectSource()
