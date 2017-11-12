@@ -1,8 +1,5 @@
 #include "qtsearcher.h"
-
-
 #include <QApplication>
-
 #include "statuswindow.h"
 
 int main(int argc, char *argv[])

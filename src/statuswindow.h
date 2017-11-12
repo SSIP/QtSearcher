@@ -16,10 +16,9 @@ class QMenu;
 class MainWindow : public QMainWindow
 {
 	Q_OBJECT
-	config *cfg;
-
 public:
 	MainWindow();
+	config *cfg;
 private slots:
 	void startSearch();
 	void selectSource();

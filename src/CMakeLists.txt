@@ -19,8 +19,6 @@ add_executable(QtSearcher qtsearcher.cpp statuswindow.cpp helpers.cpp)
 # Use the Widgets module from Qt 5.
 target_link_libraries(QtSearcher Qt5::Widgets)
 
-
-
 add_library(libimse SHARED IMPORTED)
 set_target_properties(libimse PROPERTIES IMPORTED_LOCATION /usr/local/lib/libimse.so)
 target_link_libraries(QtSearcher libimse)

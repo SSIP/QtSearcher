@@ -10,17 +10,17 @@ MainWindow::MainWindow()
 	setMinimumSize(1280, 960);
 	resize(1280, 960);
 
-	config cfg;
-	setStdConf(&cfg);
+	this->cfg = new config;
+	setStdConf(this->cfg);
 
 	QThread* thread1 = new QThread;
 	QThread* thread2 = new QThread;
 	QThread* thread3 = new QThread;
 	QThread* thread4 = new QThread;
-	Worker* worker1 = new Worker(&cfg, imgCenter, 1);
-	Worker* worker2 = new Worker(&cfg, imgAverage, 2);
-	Worker* worker3 = new Worker(&cfg, imgPresort, 3);
-	Worker* worker4 = new Worker(&cfg, imgCheck, 4);
+	Worker* worker1 = new Worker(this->cfg, imgCenter, 1);
+	Worker* worker2 = new Worker(this->cfg, imgAverage, 2);
+	Worker* worker3 = new Worker(this->cfg, imgPresort, 3);
+	Worker* worker4 = new Worker(this->cfg, imgCheck, 4);
 	worker1->moveToThread(thread1);
 	worker2->moveToThread(thread2);
 	worker3->moveToThread(thread3);
@@ -79,18 +79,18 @@ void MainWindow::createLayout() {
 
 void MainWindow::startSearch()
 {
-
+	cout << "start search" << endl;
 	impactSearcherStart(cfg);
 }
 
 void MainWindow::selectSource()
 {
-	cfg->srcPath = QFileDialog::getExistingDirectory(this, tr("Select source directory"), QDir::currentPath(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks).toStdString();
+	this->cfg->dstPath = QFileDialog::getExistingDirectory(this, tr("Select source directory"), QDir::currentPath(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks).toStdString();
 }
 
 void MainWindow::selectDestination()
 {
-	cfg->dstPath = QFileDialog::getExistingDirectory(this, tr("Select destination directory"), QDir::currentPath(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks).toStdString();
+	this->cfg->dstPath = QFileDialog::getExistingDirectory(this, tr("Select destination directory"), QDir::currentPath(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks).toStdString();
 }
 
 void MainWindow::keepAll()
