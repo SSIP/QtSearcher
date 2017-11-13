@@ -13,22 +13,22 @@ MainWindow::MainWindow()
 	this->cfg = new config;
 	setStdConf(this->cfg);
 
-	QThread* thread1 = new QThread;
-	QThread* thread2 = new QThread;
-	QThread* thread3 = new QThread;
-	QThread* thread4 = new QThread;
+	this->thread1 = new QThread;
+	this->thread2 = new QThread;
+	this->thread3 = new QThread;
+	this->thread4 = new QThread;
 	Worker* worker1 = new Worker(this->cfg, imgCenter, 1);
 	Worker* worker2 = new Worker(this->cfg, imgAverage, 2);
 	Worker* worker3 = new Worker(this->cfg, imgPresort, 3);
 	Worker* worker4 = new Worker(this->cfg, imgCheck, 4);
-	worker1->moveToThread(thread1);
-	worker2->moveToThread(thread2);
-	worker3->moveToThread(thread3);
-	worker4->moveToThread(thread4);
-	thread1->start();
-	thread2->start();
-	thread3->start();
-	thread4->start();
+	worker1->moveToThread(this->thread1);
+	worker2->moveToThread(this->thread2);
+	worker3->moveToThread(this->thread3);
+	worker4->moveToThread(this->thread4);
+	this->thread1->start();
+	this->thread2->start();
+	this->thread3->start();
+	this->thread4->start();
 }
 
 void MainWindow::createLayout() {

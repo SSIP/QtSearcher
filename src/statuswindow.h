@@ -30,6 +30,10 @@ private slots:
 	void about();
 
 private:
+	QThread* thread1;
+	QThread* thread2;
+	QThread* thread3;
+	QThread* thread4;
 	void createLayout();
 	void createActions();
 	void createMenus();
