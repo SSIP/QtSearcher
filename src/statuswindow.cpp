@@ -246,12 +246,15 @@ void MainWindow::getCenter()
 	// acquire average queue lock
 	this->cfg->mAverage.lock();
 	// get bottom image from queue
-	curImg = cfg->qAverage.back();
+	if(!this->cfg->qAverage.empty())
+	{
+		curImg = this->cfg->qAverage.back();
+		toQimage(curImg, cfg, curQimg);
+		imgCenter->setPixmap(QPixmap::fromImage(*curQimg));
+	}
 	// release locks
 	this->cfg->mAverage.unlock();
 	this->cfg->mUiCenter.unlock();
-	toQimage(curImg, cfg, curQimg);
-	imgCenter->setPixmap(QPixmap::fromImage(*curQimg));
 }
 
 void MainWindow::getAverage()
@@ -263,12 +266,15 @@ void MainWindow::getAverage()
 	// acquire average queue lock
 	this->cfg->mPresort.lock();
 	// get bottom image from queue
-	curImg = cfg->qPresort.back();
+	if(!this->cfg->qPresort.empty())
+	{
+		curImg = this->cfg->qPresort.back();
+		toQimage(curImg, cfg, curQimg);
+		imgAverage->setPixmap(QPixmap::fromImage(*curQimg));
+	}
 	// release locks
 	this->cfg->mPresort.unlock();
 	this->cfg->mUiAverage.unlock();
-	toQimage(curImg, cfg, curQimg);
-	imgAverage->setPixmap(QPixmap::fromImage(*curQimg));
 }
 
 void MainWindow::getPresort()
@@ -280,12 +286,15 @@ void MainWindow::getPresort()
 	// acquire average queue lock
 	this->cfg->mCheck.lock();
 	// get bottom image from queue
-	curImg = cfg->qCheck.back();
+	if(!this->cfg->qCheck.empty())
+	{
+		curImg = this->cfg->qCheck.back();
+		toQimage(curImg, cfg, curQimg);
+		imgPresort->setPixmap(QPixmap::fromImage(*curQimg));
+	}
 	// release locks
 	this->cfg->mCheck.unlock();
 	this->cfg->mUiPresort.unlock();
-	toQimage(curImg, cfg, curQimg);
-	imgPresort->setPixmap(QPixmap::fromImage(*curQimg));
 }
 
 void MainWindow::getCheck()
