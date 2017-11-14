@@ -80,3 +80,15 @@ private:
     void getPresort();
     void getCheck();
 };
+
+class MsgWorker : public QObject {
+	Q_OBJECT
+public:
+	MsgWorker(config *cfg, QTextEdit *logArea);
+	~MsgWorker();
+private:
+	QTextEdit *logArea;
+	config *cfg;
+public slots:
+    void process();
+};
