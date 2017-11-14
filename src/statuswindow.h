@@ -3,11 +3,11 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QtWidgets>
-#include <QtConcurrent>
 #include <mutex>
 #include <thread>
 #include <unistd.h>
 #include <iostream>
+#include <sstream>
 
 class QAction;
 class QActionGroup;
@@ -30,7 +30,10 @@ private slots:
 	void keepNone();
 	void about();
 	void updateMessages();
-
+    void getAverage();
+    void getCenter();
+    void getPresort();
+    void getCheck();
 private:
 	QThread* thread1;
 	QThread* thread2;
@@ -65,24 +68,3 @@ private:
 	QLabel *infoLabel;
 	QThread *thread;
 };
-
-class Worker : public QObject {
-    Q_OBJECT
-    config *cfg;
-    QLabel *label;
-    int mode;
-public:
-    Worker(config *get_cfg, QLabel *get_label, int get_mode);
-    ~Worker();
-public slots:
-    void process();
-signals:
-	void finished();
-private:
-    void getAverage();
-    void getCenter();
-    void getPresort();
-    void getCheck();
-};
-
-
