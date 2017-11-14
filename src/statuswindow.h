@@ -3,6 +3,7 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QtWidgets>
+#include <QtConcurrent>
 #include <mutex>
 #include <thread>
 #include <unistd.h>
@@ -28,12 +29,14 @@ private slots:
 	void keepCandidate();
 	void keepNone();
 	void about();
+	void updateMessages();
 
 private:
 	QThread* thread1;
 	QThread* thread2;
 	QThread* thread3;
 	QThread* thread4;
+	QThread* msgThread;
 	void createLayout();
 	void createActions();
 	void createMenus();
@@ -42,6 +45,7 @@ private:
 	QLabel *imgAverage;
 	QLabel *imgPresort;
 	QLabel *imgCheck;
+	QTextEdit *logArea;
 	QGridLayout *layout;
 	QMenu *searchMenu;
 	QMenu *configMenu;
@@ -73,7 +77,7 @@ public:
 public slots:
     void process();
 signals:
-    void finished();
+	void finished();
 private:
     void getAverage();
     void getCenter();
@@ -81,14 +85,4 @@ private:
     void getCheck();
 };
 
-class MsgWorker : public QObject {
-	Q_OBJECT
-public:
-	MsgWorker(config *cfg, QTextEdit *logArea);
-	~MsgWorker();
-private:
-	QTextEdit *logArea;
-	config *cfg;
-public slots:
-    void process();
-};
+

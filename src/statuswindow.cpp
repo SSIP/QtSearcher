@@ -13,6 +13,7 @@ MainWindow::MainWindow()
 	this->cfg = new config;
 	setStdConf(this->cfg);
 
+/*
 	this->thread1 = new QThread;
 	this->thread2 = new QThread;
 	this->thread3 = new QThread;
@@ -25,10 +26,23 @@ MainWindow::MainWindow()
 	worker2->moveToThread(this->thread2);
 	worker3->moveToThread(this->thread3);
 	worker4->moveToThread(this->thread4);
+	/*connect(this, &MainWindow::blubb, worker1, &Worker::process);
+	connect(this, &MainWindow::blubb, worker2, &Worker::process);
+	connect(this, &MainWindow::blubb, worker3, &Worker::process);
+	connect(this, &MainWindow::blubb, worker4, &Worker::process);
 	this->thread1->start();
 	this->thread2->start();
 	this->thread3->start();
 	this->thread4->start();
+	/*this->msgThread = new QThread;
+	MsgWorker *mWorker = new MsgWorker(this->cfg, this->logArea);
+	mWorker->moveToThread(this->thread4);
+	//connect(this, &MainWindow::blubb, mWorker, SLOT(process()));
+	this->msgThread->start();
+	QFuture<void> future = QtConcurrent::run(update_messages, this->cfg, this->logArea);*/
+	QTimer *timer_messages = new QTimer(this);
+	connect(timer_messages, SIGNAL(timeout()), this, SLOT(updateMessages()));
+	timer_messages->start(100);
 }
 
 void MainWindow::createLayout() {
@@ -61,8 +75,8 @@ void MainWindow::createLayout() {
 	imgAverage->setPixmap(QPixmap::fromImage(myImage));
 	imgPresort->setPixmap(QPixmap::fromImage(myImage));
 	imgCheck->setPixmap(QPixmap::fromImage(myImage));
-	QTextEdit *logArea = new QTextEdit();
-	logArea->setText("Hello, world!");
+	this->logArea = new QTextEdit();
+	this->logArea->setText("Hello, world!");
 	QGridLayout *layout = new QGridLayout;
 	layout->addWidget(capCenter, 0, 0);
 	layout->addWidget(capAverage, 0, 3);
@@ -72,7 +86,7 @@ void MainWindow::createLayout() {
 	layout->addWidget(imgAverage, 0, 2);
 	layout->addWidget(imgPresort, 1, 1);
 	layout->addWidget(imgCheck, 1, 2);
-	layout->addWidget(logArea, 2, 0, 1, 4);
+	layout->addWidget(this->logArea, 2, 0, 1, 4);
 	widget->setLayout(layout);
 }
 
@@ -213,6 +227,17 @@ void MainWindow::createMenus()
 	keepFrameMenu->addAction(keepNoneAct);
 }
 
+void MainWindow::updateMessages()
+{
+	cfg->mMessages.lock();
+	while(!this->cfg->qMessages.empty()) {
+		logArea->append(QString::fromStdString(cfg->qMessages.front()));
+		cfg->qMessages.pop();
+	}
+	cfg->mMessages.unlock();
+}
+
+
 Worker::Worker(config *get_cfg, QLabel *get_label, int get_mode)
 {
 	this->cfg = get_cfg;
@@ -329,40 +354,6 @@ void Worker::getCheck()
 		//this->cfg->mUiCenter.unlock();
 		//curQimg = toQimage(curImg, cfg);
 		// this->label->setPixmap(QPixmap::fromImage(curQimg));
-		usleep(microseconds);
-	}
-}
-
-
-MsgWorker::MsgWorker(config *cfg, QTextEdit *logArea)
-{
-	this->cfg = cfg;
-	this->logArea = logArea;
-}
-
-MsgWorker::~MsgWorker()
-{
-
-}
-
-void MsgWorker::process()
-{
-	image *curImg = NULL;
-	QImage *curQimg = NULL;
-	unsigned int microseconds = 100;
-	for(;;)
-	{
-		cfg->mMessages.lock();
-
-		if(cfg->qMessages.empty()) {
-			cfg->mMessages.unlock();
-			continue;
-		}
-		else {
-			this->logArea->append(QString::fromStdString(cfg->qMessages.front()));
-			cfg->qMessages.pop();
-			cfg->mMessages.unlock();
-		}
 		usleep(microseconds);
 	}
 }
