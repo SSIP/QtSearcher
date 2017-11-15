@@ -44,31 +44,31 @@ void MainWindow::createLayout() {
 	capPresort->setAlignment(Qt::AlignRight);
 	QLabel *capCheck = new QLabel("Check");
 	capCheck->setAlignment(Qt::AlignLeft);
-	QLabel *imgCenter = new QLabel();
-	QLabel *imgAverage = new QLabel();
-	QLabel *imgPresort = new QLabel();
-	QLabel *imgCheck = new QLabel();
+	this->imgCenter = new QLabel();
+	this->imgAverage = new QLabel();
+	this->imgPresort = new QLabel();
+	this->imgCheck = new QLabel();
 
-	imgCenter->setFixedWidth(350);
-	imgCenter->setFixedHeight(350);
-	imgAverage->setFixedWidth(350);
-	imgAverage->setFixedHeight(350);
-	imgPresort->setFixedWidth(350);
-	imgPresort->setFixedHeight(350);
-	imgCheck->setFixedWidth(350);
-	imgCheck->setFixedHeight(350);
-	imgCenter->setPixmap(QPixmap::fromImage(myImage));
-	imgAverage->setPixmap(QPixmap::fromImage(myImage));
-	imgPresort->setPixmap(QPixmap::fromImage(myImage));
-	imgCheck->setPixmap(QPixmap::fromImage(myImage));
+	this->imgCenter->setFixedWidth(350);
+	this->imgCenter->setFixedHeight(350);
+	this->imgAverage->setFixedWidth(350);
+	this->imgAverage->setFixedHeight(350);
+	this->imgPresort->setFixedWidth(350);
+	this->imgPresort->setFixedHeight(350);
+	this->imgCheck->setFixedWidth(350);
+	this->imgCheck->setFixedHeight(350);
+	this->imgCenter->setPixmap(QPixmap::fromImage(myImage));
+	this->imgAverage->setPixmap(QPixmap::fromImage(myImage));
+	this->imgPresort->setPixmap(QPixmap::fromImage(myImage));
+	this->imgCheck->setPixmap(QPixmap::fromImage(myImage));
 	this->logArea = new QTextEdit();
-	this->logArea->setText("Log Area\n========================================================");
+	this->logArea->setText("Log\n========================================================");
 	QGridLayout *layout = new QGridLayout;
 	layout->addWidget(capCenter, 0, 0);
 	layout->addWidget(capAverage, 0, 3);
 	layout->addWidget(capPresort, 1, 0);
 	layout->addWidget(capCheck, 1, 3);
-	layout->addWidget(imgCenter, 0, 1);
+	layout->addWidget(this->imgCenter, 0, 1);
 	layout->addWidget(imgAverage, 0, 2);
 	layout->addWidget(imgPresort, 1, 1);
 	layout->addWidget(imgCheck, 1, 2);
@@ -240,7 +240,6 @@ void MainWindow::updateMessages()
 void MainWindow::getCenter()
 {
 	image *curImg = NULL;
-	QImage *curQimg = NULL;
 	// lock UI to block average thread vom popping image
 	this->cfg->mUiCenter.lock();
 	// acquire average queue lock
@@ -249,12 +248,18 @@ void MainWindow::getCenter()
 	if(!this->cfg->qAverage.empty())
 	{
 		curImg = this->cfg->qAverage.back();
-		toQimage(curImg, cfg, curQimg);
-		imgCenter->setPixmap(QPixmap::fromImage(*curQimg));
+		this->cfg->mAverage.unlock();
+		this->cfg->mUiCenter.unlock();
 	}
-	// release locks
-	this->cfg->mAverage.unlock();
-	this->cfg->mUiCenter.unlock();
+	else
+	{
+		this->cfg->mAverage.unlock();
+		this->cfg->mUiCenter.unlock();
+		return;
+	}
+	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB888);
+	toQimage(curImg, this->cfg, &curQimg);
+	this->imgCenter->setPixmap(QPixmap::fromImage(curQimg));
 }
 
 void MainWindow::getAverage()
@@ -269,12 +274,18 @@ void MainWindow::getAverage()
 	if(!this->cfg->qPresort.empty())
 	{
 		curImg = this->cfg->qPresort.back();
-		toQimage(curImg, cfg, curQimg);
-		imgAverage->setPixmap(QPixmap::fromImage(*curQimg));
+		this->cfg->mPresort.unlock();
+		this->cfg->mUiAverage.unlock();
 	}
-	// release locks
-	this->cfg->mPresort.unlock();
-	this->cfg->mUiAverage.unlock();
+	else
+	{
+		this->cfg->mPresort.unlock();
+		this->cfg->mUiAverage.unlock();
+		return;
+	}
+	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB888);
+	toQimage(curImg, this->cfg, &curQimg);
+	this->imgAverage->setPixmap(QPixmap::fromImage(curQimg));
 }
 
 void MainWindow::getPresort()
@@ -289,12 +300,18 @@ void MainWindow::getPresort()
 	if(!this->cfg->qCheck.empty())
 	{
 		curImg = this->cfg->qCheck.back();
-		toQimage(curImg, cfg, curQimg);
-		imgPresort->setPixmap(QPixmap::fromImage(*curQimg));
+		this->cfg->mCheck.unlock();
+		this->cfg->mUiPresort.unlock();
 	}
-	// release locks
-	this->cfg->mCheck.unlock();
-	this->cfg->mUiPresort.unlock();
+	else
+	{
+		this->cfg->mCheck.unlock();
+		this->cfg->mUiPresort.unlock();
+		return;
+	}
+	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB888);
+	toQimage(curImg, this->cfg, &curQimg);
+	this->imgPresort->setPixmap(QPixmap::fromImage(curQimg));
 }
 
 void MainWindow::getCheck()

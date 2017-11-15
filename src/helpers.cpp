@@ -1,16 +1,23 @@
 #include "helpers.h"
-
-void toQimage(image *sourceImage, config *cfg, QImage *curImg)
+#include <iostream>
+void toQimage(image *sourceImage, config *cfg, QImage *curQimg)
 {
-	curImg = new QImage(sourceImage->rawBitmap,
-						static_cast<int>(cfg->imageResX),
-						static_cast<int>(cfg->imageResY),
-						static_cast<int>(cfg->imageResX),
-						QImage::Format_Indexed8
-						);
+	curQimg->fill(QColor(Qt::white).rgb());
+
+	for (int x = 0; x < cfg->imageResX; ++x) {
+		for (int y = 0; y < cfg->imageResY; ++y) {
+			uint8_t val = sourceImage->rawBitmap[y * 400 + x];
+			curQimg->setPixel(x, y, qRgb(val, val, val));
+		}
+	}
 }
 
 void  setStdConf(config* cfg) {
+	// TEMP
+	cfg->imageResX = 400;
+	cfg->imageResY = 400;
+	// END TEMP
+
 	//cfg->imageResX = cfg->imageResY = 480;
 	cfg->srcPath = QDir::homePath().toStdString();
 	cfg->dstPath = QDir::homePath().toStdString();;
