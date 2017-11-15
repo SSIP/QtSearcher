@@ -265,7 +265,6 @@ void MainWindow::getCenter()
 void MainWindow::getAverage()
 {
     image *curImg = NULL;
-    QImage *curQimg = NULL;
 	// lock UI to block average thread vom popping image
 	this->cfg->mUiAverage.lock();
 	// acquire average queue lock
@@ -291,7 +290,6 @@ void MainWindow::getAverage()
 void MainWindow::getPresort()
 {
     image *curImg = NULL;
-    QImage *curQimg = NULL;
 	// lock UI to block average thread vom popping image
 	this->cfg->mUiPresort.lock();
 	// acquire average queue lock
@@ -317,7 +315,6 @@ void MainWindow::getPresort()
 void MainWindow::getCheck()
 {
     image *curImg = NULL;
-    QImage *curQimg = NULL;
 	// lock UI to block average thread vom popping image
 	//this->cfg->mUiCheck.lock();
 	// acquire average queue lock
