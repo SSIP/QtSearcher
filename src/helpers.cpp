@@ -35,4 +35,8 @@ void  setStdConf(config* cfg) {
 	cfg->verbosity = 3;
 	cfg->rayBrightnessThreshold = 0.3;
 	cfg->maxDiameter = 0.4;
+	cfg->leadingAverageLength = 5;
+	cfg->trailingAverageLength = 15;
+	cfg->leadingAverage = new averageImage(cfg->imageResX, cfg->imageResY, cfg->leadingAverageLength);
+	cfg->trailingAverage = new averageImage(cfg->imageResX, cfg->imageResY, cfg->trailingAverageLength);
 }
