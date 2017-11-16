@@ -1,7 +1,7 @@
 dist: xenial
 sudo: required
 before_install:
-  - sudo apt-get install -y libpthread-stubs0-dev libqt5*
+  - sudo apt-get install -y libpthread-stubs0-dev libqt53dcore5
 # Enable C++ support
 language: cpp
 # Compiler selection
