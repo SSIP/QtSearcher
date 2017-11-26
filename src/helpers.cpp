@@ -1,12 +1,10 @@
 #include "helpers.h"
-#include <iostream>
 void toQimage(image *sourceImage, config *cfg, QImage *curQimg)
 {
 	curQimg->fill(QColor(Qt::white).rgb());
-
 	for (int x = 0; x < cfg->imageResX; ++x) {
 		for (int y = 0; y < cfg->imageResY; ++y) {
-			uint8_t val = sourceImage->rawBitmap[y * 400 + x];
+			uint8_t val = (uint8_t)sourceImage->rawBitmap[(uint32_t)(y * 400 + x)];
 			curQimg->setPixel(x, y, qRgb(val, val, val));
 		}
 	}
@@ -37,6 +35,7 @@ void  setStdConf(config* cfg) {
 	cfg->maxDiameter = 0.4;
 	cfg->leadingAverageLength = 5;
 	cfg->trailingAverageLength = 15;
+	cfg->framebufferLength = 20;
 	cfg->leadingAverage = new averageImage(cfg->imageResX, cfg->imageResY, cfg->leadingAverageLength);
 	cfg->trailingAverage = new averageImage(cfg->imageResX, cfg->imageResY, cfg->trailingAverageLength);
 }
