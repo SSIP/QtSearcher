@@ -2,19 +2,13 @@ dist: xenial
 sudo: required
 before_install:
   - sleep 10
-  - sudo apt-get install -y --allow-unauthenticated libpthread-stubs0-dev qtbase5-dev qtdeclarative5-dev
-# Enable C++ support
-language: cpp
-# Compiler selection
-compiler:
-  - gcc
+  - sudo apt-get install -y --allow-unauthenticated libpthread-stubs0-dev qtbase5-dev qtdeclarative5-dev cmake gcc
+#language: cpp
+#compiler:
+#  - gcc
 
 before_script:
   - git clone https://github.com/SSIP/ImpactSearcher.git
   - cd ImpactSearcher && cmake src && make imse && sudo make install && cd ..
-# Build steps
 script:
-#  - mkdir build
-#  - cd build
-
   - cmake src && make
