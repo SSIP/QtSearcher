@@ -1,6 +1,7 @@
 dist: xenial
 sudo: required
 before_install:
+  - sleep 10
   - sudo apt-get install -y --allow-unauthenticated libpthread-stubs0-dev qtbase5-dev qtdeclarative5-dev
 # Enable C++ support
 language: cpp
