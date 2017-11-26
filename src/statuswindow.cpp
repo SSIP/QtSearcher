@@ -239,6 +239,8 @@ void MainWindow::updateMessages()
 
 void MainWindow::getCenter()
 {
+	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB888);
+	image *curImg = NULL;
 	// lock UI to block average thread vom popping image
 	this->cfg->mUiCenter.lock();
 	// acquire average queue lock
@@ -246,11 +248,10 @@ void MainWindow::getCenter()
 	// get bottom image from queue
 	if(!this->cfg->qAverage.empty())
 	{
-		image curImg = *this->cfg->qAverage.back();
+		curImg = this->cfg->qAverage.back();
+		toQimage(curImg, this->cfg, &curQimg);
 		this->cfg->mAverage.unlock();
 		this->cfg->mUiCenter.unlock();
-		QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB888);
-		toQimage(&curImg, this->cfg, &curQimg);
 		this->imgCenter->setPixmap(QPixmap::fromImage(curQimg));
 	}
 	else
@@ -263,6 +264,8 @@ void MainWindow::getCenter()
 
 void MainWindow::getAverage()
 {
+	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB888);
+	image *curImg = NULL;
 	// lock UI to block average thread vom popping image
 	this->cfg->mUiAverage.lock();
 	// acquire average queue lock
@@ -270,11 +273,10 @@ void MainWindow::getAverage()
 	// get bottom image from queue
 	if(!this->cfg->qPresort.empty())
 	{
-		image curImg = *this->cfg->qPresort.back();
+		curImg = this->cfg->qPresort.back();
+		toQimage(curImg, this->cfg, &curQimg);
 		this->cfg->mPresort.unlock();
 		this->cfg->mUiAverage.unlock();
-		QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB888);
-		toQimage(&curImg, this->cfg, &curQimg);
 		this->imgAverage->setPixmap(QPixmap::fromImage(curQimg));
 	}
 	else
@@ -287,6 +289,8 @@ void MainWindow::getAverage()
 
 void MainWindow::getPresort()
 {
+	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB888);
+	image *curImg = NULL;
 	// lock UI to block average thread vom popping image
 	this->cfg->mUiPresort.lock();
 	// acquire average queue lock
@@ -294,11 +298,10 @@ void MainWindow::getPresort()
 	// get bottom image from queue
 	if(!this->cfg->qCheck.empty())
 	{
-		image curImg = *this->cfg->qCheck.back();
+		curImg = this->cfg->qCheck.back();
+		toQimage(curImg, this->cfg, &curQimg);
 		this->cfg->mCheck.unlock();
 		this->cfg->mUiPresort.unlock();
-		QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB888);
-		toQimage(&curImg, this->cfg, &curQimg);
 		this->imgPresort->setPixmap(QPixmap::fromImage(curQimg));
 	}
 	else
