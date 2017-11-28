@@ -32,7 +32,7 @@ void  setStdConf(config* cfg) {
 	cfg->checkRadius = 1.0;
 	cfg->verbosity = 3;
 	cfg->rayBrightnessThreshold = 0.3;
-	cfg->maxDiameter = 0.4;
+	cfg->maxDiameter = 0.8;
 	cfg->leadingAverageLength = 5;
 	cfg->trailingAverageLength = 15;
 	cfg->framebufferLength = 20;
