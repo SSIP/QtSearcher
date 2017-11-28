@@ -71,6 +71,7 @@ void MainWindow::createLayout() {
 	this->imgCheck->setPixmap(QPixmap::fromImage(myImage));
 
 	this->logArea = new QTextEdit();
+	this->logArea->setReadOnly(true);
 	this->logArea->setText("Log\n========================================================");
 	QGridLayout *layout = new QGridLayout;
 	layout->addWidget(capCenter, 0, 0);
@@ -242,6 +243,7 @@ void MainWindow::updateMessages()
 	while(!this->cfg->qMessages.empty()) {
 		logArea->append(QString::fromStdString(cfg->qMessages.front()));
 		this->cfg->qMessages.pop();
+		logArea->verticalScrollBar()->setValue(logArea->verticalScrollBar()->maximum());
 	}
 	this->cfg->mMessages.unlock();
 }
