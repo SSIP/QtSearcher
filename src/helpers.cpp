@@ -1,10 +1,27 @@
 #include "helpers.h"
-void toQimage(image *sourceImage, config *cfg, QImage *curQimg)
+#include <iostream>
+void toQimage8Bit(uint8_t *sourceImage, config *cfg, QImage *curQimg)
 {
 	curQimg->fill(QColor(Qt::white).rgb());
 	for (int x = 0; x < cfg->imageResX; ++x) {
 		for (int y = 0; y < cfg->imageResY; ++y) {
-			uint8_t val = (uint8_t)sourceImage->rawBitmap[(uint32_t)(y * 400 + x)];
+			uint8_t val = (uint8_t)sourceImage[(uint32_t)(y * 400 + x)];
+			curQimg->setPixel(x, y, qRgb(val, val, val));
+		}
+	}
+}
+
+void toQimage16Bit(int16_t *sourceImage, config *cfg, QImage *curQimg)
+{
+	uint16_t val;
+	int16_t tmp;
+	curQimg->fill(QColor(Qt::white).rgb());
+	for (int x = 0; x < cfg->imageResX; ++x) {
+		for (int y = 0; y < cfg->imageResY; ++y) {
+			tmp = sourceImage[(uint32_t)(y * 400 + x)] + 128;
+			uint16_t val = (uint16_t)tmp;
+			if(y == 200 && x == 200)
+				cout << "Center value: " << val << endl;
 			curQimg->setPixel(x, y, qRgb(val, val, val));
 		}
 	}

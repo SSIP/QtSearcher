@@ -250,7 +250,7 @@ void MainWindow::updateMessages()
 
 void MainWindow::getCenter()
 {
-	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB888);
+	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB32);
 	image *curImg = NULL;
 	// lock UI to block average thread vom popping image
 	this->cfg->mUiCenter.lock();
@@ -260,7 +260,7 @@ void MainWindow::getCenter()
 	if(!this->cfg->qAverage.empty())
 	{
 		curImg = this->cfg->qAverage.back();
-		toQimage(curImg, this->cfg, &curQimg);
+		toQimage8Bit(curImg->rawBitmap, this->cfg, &curQimg);
 		this->cfg->mAverage.unlock();
 		this->cfg->mUiCenter.unlock();
 		this->imgCenter->setPixmap(QPixmap::fromImage(curQimg));
@@ -275,7 +275,7 @@ void MainWindow::getCenter()
 
 void MainWindow::getAverage()
 {
-	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB888);
+	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB16);
 	image *curImg = NULL;
 	// lock UI to block average thread vom popping image
 	this->cfg->mUiAverage.lock();
@@ -285,7 +285,7 @@ void MainWindow::getAverage()
 	if(!this->cfg->qPresort.empty())
 	{
 		curImg = this->cfg->qPresort.back();
-		toQimage(curImg, this->cfg, &curQimg);
+		toQimage16Bit(curImg->diffBitmap, this->cfg, &curQimg);
 		this->cfg->mPresort.unlock();
 		this->cfg->mUiAverage.unlock();
 		this->imgAverage->setPixmap(QPixmap::fromImage(curQimg));
@@ -310,7 +310,7 @@ void MainWindow::getPresort()
 	if(!this->cfg->qCheck.empty())
 	{
 		curImg = this->cfg->qCheck.back();
-		toQimage(curImg, this->cfg, &curQimg);
+		toQimage8Bit(curImg->rawBitmap, this->cfg, &curQimg);
 		this->cfg->mCheck.unlock();
 		this->cfg->mUiPresort.unlock();
 		this->imgPresort->setPixmap(QPixmap::fromImage(curQimg));
