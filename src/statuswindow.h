@@ -28,6 +28,11 @@ private slots:
 	void keepInteresting();
 	void keepCandidate();
 	void keepNone();
+	void logNone();
+	void logDefault();
+	void logMore();
+	void logAll();
+	void logDebug();
 	void about();
 	void updateMessages();
     void getAverage();

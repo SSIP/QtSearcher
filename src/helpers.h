@@ -7,5 +7,6 @@
 #include <unistd.h>
 #include <iostream>
 
-void toQimage(image *sourceImage, config *cfg, QImage *curImg);
+void toQimage8Bit(uint8_t *sourceImage, config *cfg, QImage *curImg);
+void toQimage16Bit(int16_t *sourceImage, config *cfg, QImage *curImg);
 void setStdConf(config* cfg);
