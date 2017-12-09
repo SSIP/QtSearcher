@@ -1,5 +1,4 @@
 #include "helpers.h"
-#include <iostream>
 void toQimage8Bit(uint8_t *sourceImage, config *cfg, QImage *curQimg)
 {
 	curQimg->fill(QColor(Qt::white).rgb());
@@ -20,8 +19,6 @@ void toQimage16Bit(int16_t *sourceImage, config *cfg, QImage *curQimg)
 		for (int y = 0; y < cfg->imageResY; ++y) {
 			tmp = sourceImage[(uint32_t)(y * 400 + x)] + 128;
 			uint16_t val = (uint16_t)tmp;
-			if(y == 200 && x == 200)
-				cout << "Center value: " << val << endl;
 			curQimg->setPixel(x, y, qRgb(val, val, val));
 		}
 	}
@@ -47,7 +44,7 @@ void  setStdConf(config* cfg) {
 	cfg->devCrit = 1.5;
 	cfg->checkSNR = 5.0;
 	cfg->checkRadius = 1.0;
-	cfg->verbosity = 3;
+	cfg->verbosity = 1;
 	cfg->rayBrightnessThreshold = 0.3;
 	cfg->maxDiameter = 0.8;
 	cfg->leadingAverageLength = 5;

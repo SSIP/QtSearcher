@@ -28,6 +28,11 @@ private slots:
 	void keepInteresting();
 	void keepCandidate();
 	void keepNone();
+	void logNone();
+	void logDefault();
+	void logMore();
+	void logAll();
+	void logDebug();
 	void about();
 	void updateMessages();
     void getAverage();
@@ -54,7 +59,9 @@ private:
 	QMenu *configMenu;
 	QMenu *keepFrameMenu;
 	QMenu *helpMenu;
+	QMenu *logLevelMenu;
 	QActionGroup *keepFrameGroup;
+	QActionGroup *logMenuGroup;
 	QAction *searchAct;
 	QAction *exitAct;
 	QAction *srcAct;
@@ -64,6 +71,11 @@ private:
 	QAction *keepInterestingAct;
 	QAction *keepCandidateAct;
 	QAction *keepNoneAct;
+	QAction *logNoneAct;
+	QAction *logDefaultAct;
+	QAction *logMoreAct;
+	QAction *logAllAct;
+	QAction *logDebugAct;
 	QAction *aboutAct;
 	QLabel *infoLabel;
 	QThread *thread;

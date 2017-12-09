@@ -121,20 +121,63 @@ void MainWindow::keepAll()
 {
 	infoLabel->setText(tr("Keep all frames"));
 }
-
 void MainWindow::keepInteresting()
 {
 	infoLabel->setText(tr("Keep interesting frames"));
 }
-
 void MainWindow::keepCandidate()
 {
 	infoLabel->setText(tr("Keep frames with impact candidate"));
 }
-
 void MainWindow::keepNone()
 {
 	infoLabel->setText(tr("Keep no frames"));
+}
+
+void MainWindow::logNone()
+{
+	this->cfg->verbosity = 0;
+	this->cfg->mMessages.lock();
+	stringstream ss;
+	ss << "Verbosity set to None";
+	this->cfg->qMessages.push(ss.str());
+	this->cfg->mMessages.unlock();
+}
+void MainWindow::logDefault()
+{
+	this->cfg->verbosity = 1;
+	this->cfg->mMessages.lock();
+	stringstream ss;
+	ss << "Verbosity set to Default";
+	this->cfg->qMessages.push(ss.str());
+	this->cfg->mMessages.unlock();
+}
+void MainWindow::logMore()
+{
+	this->cfg->verbosity = 2;
+	this->cfg->mMessages.lock();
+	stringstream ss;
+	ss << "Verbosity set to More";
+	this->cfg->qMessages.push(ss.str());
+	this->cfg->mMessages.unlock();
+}
+void MainWindow::logAll()
+{
+	this->cfg->verbosity = 3;
+	this->cfg->mMessages.lock();
+	stringstream ss;
+	ss << "Verbosity set to All";
+	this->cfg->qMessages.push(ss.str());
+	this->cfg->mMessages.unlock();
+}
+void MainWindow::logDebug()
+{
+	this->cfg->verbosity = 4;
+	this->cfg->mMessages.lock();
+	stringstream ss;
+	ss << "Verbosity set to Debug";
+	this->cfg->qMessages.push(ss.str());
+	this->cfg->mMessages.unlock();
 }
 
 void MainWindow::about()
@@ -169,6 +212,12 @@ void MainWindow::createActions()
 		*    -> All
 		*    -> Interesting
 		*    -> Candidate
+		* -> Log level
+		*    -> 0 (None)
+		*    -> 1 (Default)
+		*    -> 2 (More)
+		*    -> 3 (All)
+		*    -> 4 (Debug)
 		*/
 	srcAct = new QAction(tr("&Source folder"), this);
 	//srcAct->setShortcuts(tr());
@@ -176,41 +225,59 @@ void MainWindow::createActions()
 	connect(srcAct, &QAction::triggered, this, &MainWindow::selectSource);
 
 	dstAct = new QAction(tr("&Destination folder"), this);
-	//dstAct->setShortcuts(tr());
 	dstAct->setStatusTip(tr("Select destination folder for images"));
 	connect(dstAct, &QAction::triggered, this, &MainWindow::selectDestination);
 
-	keepAllAct = new QAction(tr("&Right Align"), this);
+	keepAllAct = new QAction(tr("All"), this);
 	keepAllAct->setCheckable(true);
-	//keepAllAct->setShortcut(tr("Ctrl+R"));
 	keepAllAct->setStatusTip(tr("Keep all frames in destination folder"));
 	connect(keepAllAct, &QAction::triggered, this, &MainWindow::keepAll);
-
-	keepInterestingAct = new QAction(tr("&Right Align"), this);
+	keepInterestingAct = new QAction(tr("Interesting"), this);
 	keepInterestingAct->setCheckable(true);
-	//keepInterestingAct->setShortcut(tr("Ctrl+R"));
 	keepInterestingAct->setStatusTip(tr("Keep interesting frames in destination folder"));
 	connect(keepInterestingAct, &QAction::triggered, this, &MainWindow::keepInteresting);
-
-	keepCandidateAct = new QAction(tr("&Right Align"), this);
+	keepCandidateAct = new QAction(tr("Candidates"), this);
 	keepCandidateAct->setCheckable(true);
-	//keepCandidateAct->setShortcut(tr("Ctrl+R"));
 	keepCandidateAct->setStatusTip(tr("Keep candidate frames in destination folder"));
 	connect(keepCandidateAct, &QAction::triggered, this, &MainWindow::keepCandidate);
-
-	keepNoneAct = new QAction(tr("&Right Align"), this);
+	keepNoneAct = new QAction(tr("None"), this);
 	keepNoneAct->setCheckable(true);
-	//keepNoneAct->setShortcut(tr("Ctrl+R"));
-	keepNoneAct->setStatusTip(tr("Keep candidate frames in destination folder"));
+	keepNoneAct->setStatusTip(tr("Keep no frames in destination folder"));
 	connect(keepNoneAct, &QAction::triggered, this, &MainWindow::keepNone);
-
-
 	keepFrameGroup = new QActionGroup(this);
 	keepFrameGroup->addAction(keepAllAct);
 	keepFrameGroup->addAction(keepInterestingAct);
 	keepFrameGroup->addAction(keepCandidateAct);
 	keepFrameGroup->addAction(keepNoneAct);
 	keepAllAct->setChecked(true);
+
+	logNoneAct = new QAction(tr("No messages"), this);
+	logNoneAct->setCheckable(true);
+	logNoneAct->setStatusTip(tr("0 (None)"));
+	connect(logNoneAct, &QAction::triggered, this, &MainWindow::logNone);
+	logDefaultAct = new QAction(tr("Default"), this);
+	logDefaultAct->setCheckable(true);
+	logDefaultAct->setStatusTip(tr("1 (Default)"));
+	connect(logDefaultAct, &QAction::triggered, this, &MainWindow::logDefault);
+	logMoreAct = new QAction(tr("More messages"), this);
+	logMoreAct->setCheckable(true);
+	logMoreAct->setStatusTip(tr("2 (More)"));
+	connect(logMoreAct, &QAction::triggered, this, &MainWindow::logMore);
+	logAllAct = new QAction(tr("All messages"), this);
+	logAllAct->setCheckable(true);
+	logAllAct->setStatusTip(tr("3 (All)"));
+	connect(logAllAct, &QAction::triggered, this, &MainWindow::logAll);
+	logDebugAct = new QAction(tr("Debug output"), this);
+	logDebugAct->setCheckable(true);
+	logDebugAct->setStatusTip(tr("May change results"));
+	connect(logDebugAct, &QAction::triggered, this, &MainWindow::logDebug);
+	logMenuGroup = new QActionGroup(this);
+	logMenuGroup->addAction(logNoneAct);
+	logMenuGroup->addAction(logDefaultAct);
+	logMenuGroup->addAction(logMoreAct);
+	logMenuGroup->addAction(logAllAct);
+	logMenuGroup->addAction(logDebugAct);
+	logDefaultAct->setChecked(true);
 
 	aboutAct = new QAction(tr("&About"), this);
 	aboutAct->setStatusTip(tr("About the project"));
@@ -235,6 +302,13 @@ void MainWindow::createMenus()
 	keepFrameMenu->addAction(keepInterestingAct);
 	keepFrameMenu->addAction(keepCandidateAct);
 	keepFrameMenu->addAction(keepNoneAct);
+
+	logLevelMenu = configMenu->addMenu(tr("Set &Log level"));
+	logLevelMenu->addAction(logNoneAct);
+	logLevelMenu->addAction(logDefaultAct);
+	logLevelMenu->addAction(logMoreAct);
+	logLevelMenu->addAction(logAllAct);
+	logLevelMenu->addAction(logDebugAct);
 }
 
 void MainWindow::updateMessages()
