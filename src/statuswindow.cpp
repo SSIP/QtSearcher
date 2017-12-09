@@ -169,6 +169,12 @@ void MainWindow::createActions()
 		*    -> All
 		*    -> Interesting
 		*    -> Candidate
+		* -> Log level
+		*    -> 0 (None)
+		*    -> 1 (Default)
+		*    -> 2 (More)
+		*    -> 3 (All)
+		*    -> 4 (Debug)
 		*/
 	srcAct = new QAction(tr("&Source folder"), this);
 	//srcAct->setShortcuts(tr());
@@ -176,41 +182,59 @@ void MainWindow::createActions()
 	connect(srcAct, &QAction::triggered, this, &MainWindow::selectSource);
 
 	dstAct = new QAction(tr("&Destination folder"), this);
-	//dstAct->setShortcuts(tr());
 	dstAct->setStatusTip(tr("Select destination folder for images"));
 	connect(dstAct, &QAction::triggered, this, &MainWindow::selectDestination);
 
 	keepAllAct = new QAction(tr("&Right Align"), this);
 	keepAllAct->setCheckable(true);
-	//keepAllAct->setShortcut(tr("Ctrl+R"));
 	keepAllAct->setStatusTip(tr("Keep all frames in destination folder"));
 	connect(keepAllAct, &QAction::triggered, this, &MainWindow::keepAll);
-
 	keepInterestingAct = new QAction(tr("&Right Align"), this);
 	keepInterestingAct->setCheckable(true);
-	//keepInterestingAct->setShortcut(tr("Ctrl+R"));
 	keepInterestingAct->setStatusTip(tr("Keep interesting frames in destination folder"));
 	connect(keepInterestingAct, &QAction::triggered, this, &MainWindow::keepInteresting);
-
 	keepCandidateAct = new QAction(tr("&Right Align"), this);
 	keepCandidateAct->setCheckable(true);
-	//keepCandidateAct->setShortcut(tr("Ctrl+R"));
 	keepCandidateAct->setStatusTip(tr("Keep candidate frames in destination folder"));
 	connect(keepCandidateAct, &QAction::triggered, this, &MainWindow::keepCandidate);
-
 	keepNoneAct = new QAction(tr("&Right Align"), this);
 	keepNoneAct->setCheckable(true);
-	//keepNoneAct->setShortcut(tr("Ctrl+R"));
 	keepNoneAct->setStatusTip(tr("Keep candidate frames in destination folder"));
 	connect(keepNoneAct, &QAction::triggered, this, &MainWindow::keepNone);
-
-
 	keepFrameGroup = new QActionGroup(this);
 	keepFrameGroup->addAction(keepAllAct);
 	keepFrameGroup->addAction(keepInterestingAct);
 	keepFrameGroup->addAction(keepCandidateAct);
 	keepFrameGroup->addAction(keepNoneAct);
 	keepAllAct->setChecked(true);
+
+	logNoneAct = new QAction(tr("&Right Align"), this);
+	logNoneAct->setCheckable(true);
+	logNoneAct->setStatusTip(tr("0 (None)"));
+	connect(logNoneAct, &QAction::triggered, this, &MainWindow::keepAll);
+	logDefaultAct = new QAction(tr("&Right Align"), this);
+	logDefaultAct->setCheckable(true);
+	logDefaultAct->setStatusTip(tr("1 (Default)"));
+	connect(logDefaultAct, &QAction::triggered, this, &MainWindow::keepInteresting);
+	logMoreAct = new QAction(tr("&Right Align"), this);
+	logMoreAct->setCheckable(true);
+	logMoreAct->setStatusTip(tr("2 (More)"));
+	connect(logMoreAct, &QAction::triggered, this, &MainWindow::keepCandidate);
+	logAllAct = new QAction(tr("&Right Align"), this);
+	logAllAct->setCheckable(true);
+	logAllAct->setStatusTip(tr("3 (All)"));
+	connect(logAllAct, &QAction::triggered, this, &MainWindow::keepNone);
+	logDebugAct = new QAction(tr("&Right Align"), this);
+	logDebugAct->setCheckable(true);
+	logDebugAct->setStatusTip(tr("3 (All)"));
+	connect(logDebugAct, &QAction::triggered, this, &MainWindow::keepNone);
+	logMenuGroup = new QActionGroup(this);
+	logMenuGroup->addAction(logNoneAct);
+	logMenuGroup->addAction(logDefaultAct);
+	logMenuGroup->addAction(logMoreAct);
+	logMenuGroup->addAction(logAllAct);
+	logMenuGroup->addAction(logDebugAct);
+	logDefaultAct->setChecked(true);
 
 	aboutAct = new QAction(tr("&About"), this);
 	aboutAct->setStatusTip(tr("About the project"));
@@ -235,6 +259,13 @@ void MainWindow::createMenus()
 	keepFrameMenu->addAction(keepInterestingAct);
 	keepFrameMenu->addAction(keepCandidateAct);
 	keepFrameMenu->addAction(keepNoneAct);
+
+	logLevelMenu = configMenu->addMenu(tr("Set &Log level"));
+	keepFrameMenu->addAction(logNoneAct);
+	keepFrameMenu->addAction(logDefaultAct);
+	keepFrameMenu->addAction(logMoreAct);
+	keepFrameMenu->addAction(logAllAct);
+	keepFrameMenu->addAction(logDebugAct);
 }
 
 void MainWindow::updateMessages()
@@ -250,7 +281,7 @@ void MainWindow::updateMessages()
 
 void MainWindow::getCenter()
 {
-	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB888);
+	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB32);
 	image *curImg = NULL;
 	// lock UI to block average thread vom popping image
 	this->cfg->mUiCenter.lock();
@@ -260,7 +291,7 @@ void MainWindow::getCenter()
 	if(!this->cfg->qAverage.empty())
 	{
 		curImg = this->cfg->qAverage.back();
-		toQimage(curImg, this->cfg, &curQimg);
+		toQimage8Bit(curImg->rawBitmap, this->cfg, &curQimg);
 		this->cfg->mAverage.unlock();
 		this->cfg->mUiCenter.unlock();
 		this->imgCenter->setPixmap(QPixmap::fromImage(curQimg));
@@ -275,7 +306,7 @@ void MainWindow::getCenter()
 
 void MainWindow::getAverage()
 {
-	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB888);
+	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB16);
 	image *curImg = NULL;
 	// lock UI to block average thread vom popping image
 	this->cfg->mUiAverage.lock();
@@ -285,7 +316,7 @@ void MainWindow::getAverage()
 	if(!this->cfg->qPresort.empty())
 	{
 		curImg = this->cfg->qPresort.back();
-		toQimage(curImg, this->cfg, &curQimg);
+		toQimage16Bit(curImg->diffBitmap, this->cfg, &curQimg);
 		this->cfg->mPresort.unlock();
 		this->cfg->mUiAverage.unlock();
 		this->imgAverage->setPixmap(QPixmap::fromImage(curQimg));
@@ -310,7 +341,7 @@ void MainWindow::getPresort()
 	if(!this->cfg->qCheck.empty())
 	{
 		curImg = this->cfg->qCheck.back();
-		toQimage(curImg, this->cfg, &curQimg);
+		toQimage8Bit(curImg->rawBitmap, this->cfg, &curQimg);
 		this->cfg->mCheck.unlock();
 		this->cfg->mUiPresort.unlock();
 		this->imgPresort->setPixmap(QPixmap::fromImage(curQimg));
