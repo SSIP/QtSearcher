@@ -52,23 +52,19 @@ void MainWindow::createLayout() {
 
 	this->imgCenter->setFixedWidth(350);
 	this->imgCenter->setFixedHeight(350);
-	this->imgCenter->setScaledContents(true);
-	this->imgCenter->setPixmap(QPixmap::fromImage(myImage));
+	this->imgCenter->setPixmap(QPixmap::fromImage(myImage).scaled(this->imgCenter->width(), this->imgCenter->height(), Qt::KeepAspectRatio));
 
 	this->imgAverage->setFixedWidth(350);
 	this->imgAverage->setFixedHeight(350);
-	this->imgAverage->setScaledContents(true);
-	this->imgAverage->setPixmap(QPixmap::fromImage(myImage));
+	this->imgAverage->setPixmap(QPixmap::fromImage(myImage).scaled(this->imgAverage->width(), this->imgAverage->height(), Qt::KeepAspectRatio));
 
 	this->imgPresort->setFixedWidth(350);
 	this->imgPresort->setFixedHeight(350);
-	this->imgPresort->setScaledContents(true);
-	this->imgPresort->setPixmap(QPixmap::fromImage(myImage));
+	this->imgPresort->setPixmap(QPixmap::fromImage(myImage).scaled(this->imgPresort->width(), this->imgPresort->height(), Qt::KeepAspectRatio));
 
 	this->imgCheck->setFixedWidth(350);
 	this->imgCheck->setFixedHeight(350);
-	this->imgCheck->setScaledContents(true);
-	this->imgCheck->setPixmap(QPixmap::fromImage(myImage));
+	this->imgCheck->setPixmap(QPixmap::fromImage(myImage).scaled(this->imgCheck->width(), this->imgCheck->height(), Qt::KeepAspectRatio));
 
 	this->logArea = new QTextEdit();
 	this->logArea->setReadOnly(true);
@@ -337,7 +333,7 @@ void MainWindow::getCenter()
 		toQimage8Bit(curImg->rawBitmap, this->cfg, &curQimg);
 		this->cfg->mAverage.unlock();
 		this->cfg->mUiCenter.unlock();
-		this->imgCenter->setPixmap(QPixmap::fromImage(curQimg));
+		this->imgCenter->setPixmap(QPixmap::fromImage(curQimg).scaled(this->imgCenter->width(), this->imgCenter->height(), Qt::KeepAspectRatio));
 	}
 	else
 	{
@@ -362,7 +358,7 @@ void MainWindow::getAverage()
 		toQimage16Bit(curImg->diffBitmap, this->cfg, &curQimg);
 		this->cfg->mPresort.unlock();
 		this->cfg->mUiAverage.unlock();
-		this->imgAverage->setPixmap(QPixmap::fromImage(curQimg));
+		this->imgAverage->setPixmap(QPixmap::fromImage(curQimg).scaled(this->imgAverage->width(), this->imgAverage->height(), Qt::KeepAspectRatio));
 	}
 	else
 	{
@@ -387,7 +383,7 @@ void MainWindow::getPresort()
 		toQimage8Bit(curImg->rawBitmap, this->cfg, &curQimg);
 		this->cfg->mCheck.unlock();
 		this->cfg->mUiPresort.unlock();
-		this->imgPresort->setPixmap(QPixmap::fromImage(curQimg));
+		this->imgPresort->setPixmap(QPixmap::fromImage(curQimg).scaled(this->imgPresort->width(), this->imgPresort->height(), Qt::KeepAspectRatio));
 	}
 	else
 	{
