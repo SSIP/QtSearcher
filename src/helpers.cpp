@@ -4,7 +4,7 @@ void toQimage8Bit(uint8_t *sourceImage, config *cfg, QImage *curQimg)
 	curQimg->fill(QColor(Qt::white).rgb());
 	for (int x = 0; x < cfg->imageResX; ++x) {
 		for (int y = 0; y < cfg->imageResY; ++y) {
-			uint8_t val = (uint8_t)sourceImage[(uint32_t)(y * 400 + x)];
+			uint8_t val = (uint8_t)sourceImage[(uint32_t)(y * cfg->imageResX + x)];
 			curQimg->setPixel(x, y, qRgb(val, val, val));
 		}
 	}
@@ -17,7 +17,7 @@ void toQimage16Bit(int16_t *sourceImage, config *cfg, QImage *curQimg)
 	curQimg->fill(QColor(Qt::white).rgb());
 	for (int x = 0; x < cfg->imageResX; ++x) {
 		for (int y = 0; y < cfg->imageResY; ++y) {
-			tmp = sourceImage[(uint32_t)(y * 400 + x)] + 128;
+			tmp = sourceImage[(uint32_t)(y * cfg->imageResX + x)] + 128;
 			uint16_t val = (uint16_t)tmp;
 			curQimg->setPixel(x, y, qRgb(val, val, val));
 		}
@@ -25,9 +25,9 @@ void toQimage16Bit(int16_t *sourceImage, config *cfg, QImage *curQimg)
 }
 
 void  setStdConf(config* cfg) {
-	// TEMP
-	cfg->imageResX = 400;
-	cfg->imageResY = 400;
+	// MUST BE SET TO ZERO <0> !!!
+	cfg->imageResX = 0;
+	cfg->imageResY = 0;
 	// END TEMP
 
 	cfg->srcPath = QDir::homePath().toStdString();
@@ -45,6 +45,4 @@ void  setStdConf(config* cfg) {
 	cfg->leadingAverageLength = 5;
 	cfg->trailingAverageLength = 20;
 	cfg->framebufferLength = 20;
-	cfg->leadingAverage = new averageImage(cfg->imageResX, cfg->imageResY, cfg->leadingAverageLength);
-	cfg->trailingAverage = new averageImage(cfg->imageResX, cfg->imageResY, cfg->trailingAverageLength);
 }
