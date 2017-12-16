@@ -9,4 +9,4 @@
 
 void toQimage8Bit(uint8_t *sourceImage, config *cfg, QImage *curImg);
 void toQimage16Bit(int16_t *sourceImage, config *cfg, QImage *curImg);
-void setStdConf(config* cfg);
+void modifyConfig(config* cfg);
