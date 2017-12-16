@@ -1,5 +1,9 @@
 #include "statuswindow.h"
 
+/* Create the main window, elements on it and timers that periodicall fetch
+ * images from the worker queues to display them on the window.
+ * Also adds a timer to fetch log messages.
+ */
 MainWindow::MainWindow()
 {
 	createLayout();
@@ -31,6 +35,8 @@ MainWindow::MainWindow()
 	timer_imgCheck->start(500);
 }
 
+/* Order the elements on the main window
+ */
 void MainWindow::createLayout() {
     QImage myImage;
     myImage.load("test.bmp");
@@ -82,7 +88,8 @@ void MainWindow::createLayout() {
 	widget->setLayout(layout);
 }
 
-
+/* Start the worker threads. This requires that the configuration is valid.
+ */
 void MainWindow::startSearch()
 {
 	this->cfg->mMessages.lock();
@@ -93,6 +100,8 @@ void MainWindow::startSearch()
 	impactSearcherStart(this->cfg);
 }
 
+/* Open a dialog to select the source folder of images
+ */
 void MainWindow::selectSource()
 {
 	this->cfg->srcPath = QFileDialog::getExistingDirectory(this, tr("Select source directory"), QDir::currentPath(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks).toStdString();
@@ -103,6 +112,8 @@ void MainWindow::selectSource()
 	this->cfg->mMessages.unlock();
 }
 
+/* Open a dialog to select the destination folder of images
+ */
 void MainWindow::selectDestination()
 {
 	this->cfg->dstPath = QFileDialog::getExistingDirectory(this, tr("Select destination directory"), QDir::currentPath(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks).toStdString();
@@ -113,6 +124,13 @@ void MainWindow::selectDestination()
 	this->cfg->mMessages.unlock();
 }
 
+/* Change search configuration to
+ *   - keep all or
+ *   - keep interesting or
+ *   - keep candidate or
+ *   - keep no
+ * images in destination folder.
+ */
 void MainWindow::keepAll()
 {
 	infoLabel->setText(tr("Keep all frames"));
@@ -130,6 +148,13 @@ void MainWindow::keepNone()
 	infoLabel->setText(tr("Keep no frames"));
 }
 
+/* Change search algorithm verbosity to
+ *   - no messages or
+ *   - normal amount of messages or
+ *   - more messages or
+ *   - all messages or
+ *   - add debug output.
+ */
 void MainWindow::logNone()
 {
 	this->cfg->verbosity = 0;
@@ -176,6 +201,8 @@ void MainWindow::logDebug()
 	this->cfg->mMessages.unlock();
 }
 
+/* Display information about the project.
+ */
 void MainWindow::about()
 {
 	infoLabel->setText(tr("Invoked <b>Help|About</b>"));
@@ -183,6 +210,8 @@ void MainWindow::about()
 						tr("Solar System Impact Project"));
 }
 
+/* Create actions for menu items. Called when window is created.
+ */
 void MainWindow::createActions()
 {
 	/*
@@ -280,6 +309,8 @@ void MainWindow::createActions()
 	connect(aboutAct, &QAction::triggered, this, &MainWindow::about);
 }
 
+/* Create the menus. Called when window is created.
+ */
 void MainWindow::createMenus()
 {
 	searchMenu = menuBar()->addMenu(tr("&Search"));
@@ -307,6 +338,9 @@ void MainWindow::createMenus()
 	logLevelMenu->addAction(logDebugAct);
 }
 
+/* Get messages from search algorithm and display in text area. This function
+ * is called periodically and then fetches all available messages.
+ */
 void MainWindow::updateMessages()
 {
 	this->cfg->mMessages.lock();
@@ -318,6 +352,9 @@ void MainWindow::updateMessages()
 	this->cfg->mMessages.unlock();
 }
 
+/* Get image from queue between centering and averaging threads and display
+ * it as the upper left image.
+ */
 void MainWindow::getCenter()
 {
 	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB32);
@@ -343,6 +380,9 @@ void MainWindow::getCenter()
 	}
 }
 
+/* Get image from queue between averaging and presorting threads and display
+ * it as the upper right image.
+ */
 void MainWindow::getAverage()
 {
 	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB16);
@@ -368,6 +408,9 @@ void MainWindow::getAverage()
 	}
 }
 
+/* Get image from queue between presorting and final check threads and display
+ * it as the lower left image.
+ */
 void MainWindow::getPresort()
 {
 	QImage curQimg((int)this->cfg->imageResX, (int)this->cfg->imageResY, QImage::Format_RGB888);
@@ -391,7 +434,6 @@ void MainWindow::getPresort()
 		this->cfg->mUiPresort.unlock();
 		return;
 	}
-
 }
 
 void MainWindow::getCheck()
