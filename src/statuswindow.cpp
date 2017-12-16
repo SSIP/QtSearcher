@@ -15,7 +15,8 @@ MainWindow::MainWindow()
 	resize(1280, 960);
 
 	this->cfg = new config;
-	setStdConf(this->cfg);
+	loadDefaultConfig(this->cfg);
+	modifyConfig(this->cfg);
 
 	QTimer *timer_messages = new QTimer(this);
 	connect(timer_messages, SIGNAL(timeout()), this, SLOT(updateMessages()));

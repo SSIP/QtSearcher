@@ -39,30 +39,11 @@ void toQimage16Bit(int16_t *sourceImage, config *cfg, QImage *curQimg)
 	}
 }
 
-
 /* Set a standard configuration
  *
  * Param *cfg is the reference to the configuration struct
  */
-void  setStdConf(config* cfg) {
-	// MUST BE SET TO ZERO <0> !!!
-	cfg->imageResX = 0;
-	cfg->imageResY = 0;
-	// END TEMP
-
+void  modifyConfig(config* cfg) {
 	cfg->srcPath = QDir::homePath().toStdString();
-	cfg->dstPath = QDir::homePath().toStdString();;
-	cfg->keepFrames = KEEP_ALL;
-	cfg->centerSkipPixels = 5;
-	cfg->centerAlgo = CENTER_OF_MASS;
-	cfg->centerThreshold = 50;
-	cfg->averageLength = 10;
-	cfg->checkSNR = 5.0;
-	cfg->checkRadius = 1.0;
-	cfg->verbosity = 1;
-	cfg->rayBrightnessThreshold = 0.3;
-	cfg->maxDiameter = 0.8;
-	cfg->leadingAverageLength = 5;
-	cfg->trailingAverageLength = 20;
-	cfg->framebufferLength = 20;
+	cfg->dstPath = QDir::homePath().toStdString();
 }
